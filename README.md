@@ -101,4 +101,4 @@ pytest -v
 
 ## License
 
-MIT License — Copyright 2026 DongWeitao 董伟涛
+[MIT](LICENSE)
