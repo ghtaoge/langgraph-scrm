@@ -96,6 +96,7 @@ pytest -v
 - [快速开始（含 Doubao 配置）](docs/getting-started.md)
 - [模块详解与知识点](docs/module-guide.md)
 - [架构设计](docs/architecture.md)
+- [场景迁移指南](docs/migration-guide.md) — 如何将 6 模块复用到医疗/金融/HR/电商等行业
 - [贡献指南](CONTRIBUTING.md)
 
 ## License
