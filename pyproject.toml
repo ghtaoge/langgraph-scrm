@@ -1,0 +1,57 @@
+[project]
+name = "langgraph-scrm"
+version = "0.1.0"
+description = "基于 LangGraph 的 SCRM 智能客服平台 — 6 个实战模块覆盖所有核心模式"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=1.0",
+    "langchain>=0.3",
+    "langchain-openai>=0.3",
+    "langchain-community>=0.3",
+    "langchain-chroma>=0.2",
+    "chromadb>=0.5",
+    "fastapi>=0.115",
+    "uvicorn>=0.34",
+    "pydantic>=2.10",
+    "python-dotenv>=1.0",
+    "httpx>=0.28",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.9",
+    "httpx>=0.28",
+]
+doubao = [
+    "volcengine-python-sdk>=1.0",
+]
+redis = [
+    "redis>=5.0",
+    "langgraph-checkpoint-redis>=0.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: 真实 LLM 调用测试（CI 中 skip）",
+]
+asyncio_mode = "auto"
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
