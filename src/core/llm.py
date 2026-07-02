@@ -1,4 +1,5 @@
 """LLM 抽象层 — 统一接口，支持 OpenAI + Doubao 双后端切换"""
+
 import asyncio
 from functools import wraps
 from typing import Callable, Optional
@@ -56,6 +57,7 @@ def safe_llm_call(func: Callable) -> Callable:
             result = llm.invoke(...)
             return {"response": result.content}
     """
+
     @wraps(func)
     def wrapper(state):
         try:

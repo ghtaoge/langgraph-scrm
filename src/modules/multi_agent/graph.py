@@ -1,17 +1,18 @@
 """多Agent客服模块 StateGraph — Supervisor 模式"""
-from langgraph.graph import StateGraph, START, END
 
-from src.modules.multi_agent.state import MultiAgentState
+from langgraph.graph import END, START, StateGraph
+
 from src.modules.multi_agent.nodes import (
-    supervisor_node,
-    product_expert_node,
-    policy_expert_node,
     order_handler_node,
-    synthesize_node,
+    policy_expert_node,
+    product_expert_node,
     quality_check_node,
     respond_node,
     route_after_quality,
+    supervisor_node,
+    synthesize_node,
 )
+from src.modules.multi_agent.state import MultiAgentState
 
 
 def build_multi_agent_graph():
@@ -58,15 +59,17 @@ def build_multi_agent_graph():
 
 if __name__ == "__main__":
     app = build_multi_agent_graph()
-    result = app.invoke({
-        "customer_question": "我的订单迟迟没有发货，而且产品规格和描述不一致，想了解退换货政策",
-        "assigned_agents": [],
-        "agent_responses": {},
-        "final_answer": "",
-        "quality_score": 0.0,
-        "feedback": "",
-        "iteration": 0,
-        "error": None,
-        "error_node": None,
-    })
+    result = app.invoke(
+        {
+            "customer_question": "我的订单迟迟没有发货，而且产品规格和描述不一致，想了解退换货政策",
+            "assigned_agents": [],
+            "agent_responses": {},
+            "final_answer": "",
+            "quality_score": 0.0,
+            "feedback": "",
+            "iteration": 0,
+            "error": None,
+            "error_node": None,
+        }
+    )
     print(f"最终回答: {result['final_answer']}")

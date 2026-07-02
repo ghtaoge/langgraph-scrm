@@ -1,21 +1,22 @@
 """微信风控模块 StateGraph — 四路条件分支"""
-from langgraph.graph import StateGraph, START, END
 
-from src.modules.wechat_risk.state import WeChatRiskState
+from langgraph.graph import END, START, StateGraph
+
+from src.core.checkpoint import get_checkpointer
 from src.modules.wechat_risk.nodes import (
-    receive_message_node,
-    classify_node,
     allow_node,
-    log_only_node,
-    risk_assess_node,
-    escalate_node,
     block_node,
-    warn_node,
+    classify_node,
+    escalate_node,
     log_node,
+    log_only_node,
+    receive_message_node,
+    risk_assess_node,
     route_after_classify,
     route_after_risk_assess,
+    warn_node,
 )
-from src.core.checkpoint import get_checkpointer
+from src.modules.wechat_risk.state import WeChatRiskState
 
 
 def build_wechat_risk_graph(checkpointer=None):

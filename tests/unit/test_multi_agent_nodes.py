@@ -1,15 +1,16 @@
 """多Agent客服节点单元测试"""
+
 import json
 from unittest.mock import MagicMock, patch
 
 from langchain_core.messages import AIMessage
 
 from src.modules.multi_agent.nodes import (
-    supervisor_node,
     product_expert_node,
-    synthesize_node,
     quality_check_node,
     route_after_quality,
+    supervisor_node,
+    synthesize_node,
 )
 
 
@@ -22,7 +23,17 @@ def test_supervisor_node_returns_agents(mock_get_llm):
     )
     mock_get_llm.return_value = mock_llm
 
-    state = {"customer_question": "Q", "assigned_agents": [], "agent_responses": {}, "final_answer": "", "quality_score": 0.0, "feedback": "", "iteration": 0, "error": None, "error_node": None}
+    state = {
+        "customer_question": "Q",
+        "assigned_agents": [],
+        "agent_responses": {},
+        "final_answer": "",
+        "quality_score": 0.0,
+        "feedback": "",
+        "iteration": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = supervisor_node(state)
     assert result["assigned_agents"] == ["product_expert", "policy_expert"]
 
@@ -34,7 +45,17 @@ def test_supervisor_node_handles_json_error(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content="not json")
     mock_get_llm.return_value = mock_llm
 
-    state = {"customer_question": "Q", "assigned_agents": [], "agent_responses": {}, "final_answer": "", "quality_score": 0.0, "feedback": "", "iteration": 0, "error": None, "error_node": None}
+    state = {
+        "customer_question": "Q",
+        "assigned_agents": [],
+        "agent_responses": {},
+        "final_answer": "",
+        "quality_score": 0.0,
+        "feedback": "",
+        "iteration": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = supervisor_node(state)
     assert result["assigned_agents"] == ["product_expert"]
 
@@ -46,7 +67,17 @@ def test_product_expert_node_returns_partial_dict(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content="产品角度回答")
     mock_get_llm.return_value = mock_llm
 
-    state = {"customer_question": "Q", "assigned_agents": [], "agent_responses": {}, "final_answer": "", "quality_score": 0.0, "feedback": "", "iteration": 0, "error": None, "error_node": None}
+    state = {
+        "customer_question": "Q",
+        "assigned_agents": [],
+        "agent_responses": {},
+        "final_answer": "",
+        "quality_score": 0.0,
+        "feedback": "",
+        "iteration": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = product_expert_node(state)
     assert result["agent_responses"] == {"product_expert": "产品角度回答"}
 
@@ -58,7 +89,17 @@ def test_synthesize_node_returns_final_answer(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content="合成回答")
     mock_get_llm.return_value = mock_llm
 
-    state = {"customer_question": "Q", "assigned_agents": ["product_expert"], "agent_responses": {"product_expert": "回答"}, "final_answer": "", "quality_score": 0.0, "feedback": "", "iteration": 0, "error": None, "error_node": None}
+    state = {
+        "customer_question": "Q",
+        "assigned_agents": ["product_expert"],
+        "agent_responses": {"product_expert": "回答"},
+        "final_answer": "",
+        "quality_score": 0.0,
+        "feedback": "",
+        "iteration": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = synthesize_node(state)
     assert result["final_answer"] == "合成回答"
 
@@ -70,7 +111,17 @@ def test_quality_check_node_returns_score(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content=json.dumps({"score": 8.5, "feedback": "good"}))
     mock_get_llm.return_value = mock_llm
 
-    state = {"customer_question": "Q", "assigned_agents": [], "agent_responses": {}, "final_answer": "A", "quality_score": 0.0, "feedback": "", "iteration": 0, "error": None, "error_node": None}
+    state = {
+        "customer_question": "Q",
+        "assigned_agents": [],
+        "agent_responses": {},
+        "final_answer": "A",
+        "quality_score": 0.0,
+        "feedback": "",
+        "iteration": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = quality_check_node(state)
     assert result["quality_score"] == 8.5
     assert result["iteration"] == 1

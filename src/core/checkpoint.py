@@ -1,4 +1,5 @@
 """Checkpoint 配置 — 支持 SQLite/Redis/InMemory 三种持久化"""
+
 import sqlite3
 from typing import Optional
 
@@ -39,6 +40,7 @@ def get_checkpointer(
     elif store == "redis":
         try:
             from langgraph.checkpoint.redis import RedisSaver
+
             return RedisSaver.from_conn_string(settings.REDIS_URL)
         except ImportError:
             raise ImportError("Redis checkpoint 需要安装: pip install langgraph-scrm[redis]")

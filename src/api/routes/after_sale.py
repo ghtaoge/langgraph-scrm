@@ -1,7 +1,8 @@
 """售后工单 API 路由 — 含双 interrupt 恢复"""
+
 from fastapi import APIRouter
 
-from src.api.deps import get_shared_checkpointer, new_thread_id, run_graph_with_interrupt, resume_graph
+from src.api.deps import get_shared_checkpointer, new_thread_id, resume_graph, run_graph_with_interrupt
 from src.api.schemas import AfterSaleRequest, AfterSaleResumeRequest, GraphRunResponse
 from src.modules.after_sale.graph import build_after_sale_graph
 
@@ -15,9 +16,16 @@ async def start_after_sale(request: AfterSaleRequest) -> GraphRunResponse:
     thread_id = new_thread_id()
     initial = {
         "customer_request": request.customer_request,
-        "ticket_id": "", "issue_type": "", "severity": "",
-        "approval_status": "", "approver_comment": "", "resolution": "",
-        "customer_feedback": "", "status": "", "error": None, "error_node": None,
+        "ticket_id": "",
+        "issue_type": "",
+        "severity": "",
+        "approval_status": "",
+        "approver_comment": "",
+        "resolution": "",
+        "customer_feedback": "",
+        "status": "",
+        "error": None,
+        "error_node": None,
     }
     completed, data = run_graph_with_interrupt(graph, initial, thread_id)
     return GraphRunResponse(thread_id=thread_id, completed=completed, data=data)

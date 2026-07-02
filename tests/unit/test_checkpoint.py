@@ -1,4 +1,5 @@
 """测试 Checkpoint 配置"""
+
 from src.core.checkpoint import get_checkpointer
 
 

@@ -1,4 +1,5 @@
 """数据库初始化 — 创建 SQLite 表结构"""
+
 import sqlite3
 
 from src.config.settings import settings
@@ -9,6 +10,7 @@ def init_db():
     db_path = settings.DATABASE_URL.replace("sqlite:///./", "")
     # 确保目录存在
     import os
+
     os.makedirs(os.path.dirname(os.path.abspath(db_path)) or ".", exist_ok=True)
 
     conn = sqlite3.connect(db_path)

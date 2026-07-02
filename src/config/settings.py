@@ -1,6 +1,8 @@
 """全局配置加载 — 从 .env 读取所有环境变量，提供 Settings 单例"""
+
 import os
 from enum import Enum
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -8,6 +10,7 @@ load_dotenv()
 
 class LLMProvider(Enum):
     """LLM 提供者枚举"""
+
     OPENAI = "openai"
     DOUBAO = "doubao"
 

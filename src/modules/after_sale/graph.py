@@ -1,18 +1,19 @@
 """售后工单模块 StateGraph — 长流程 + 双审批"""
-from langgraph.graph import StateGraph, START, END
 
-from src.modules.after_sale.state import AfterSaleState
+from langgraph.graph import END, START, StateGraph
+
+from src.core.checkpoint import get_checkpointer
 from src.modules.after_sale.nodes import (
-    create_ticket_node,
     analyze_node,
     approve_node,
-    execute_node,
-    verify_node,
     close_node,
+    create_ticket_node,
+    execute_node,
     route_after_approve,
     route_after_verify,
+    verify_node,
 )
-from src.core.checkpoint import get_checkpointer
+from src.modules.after_sale.state import AfterSaleState
 
 
 def build_after_sale_graph(checkpointer=None):
@@ -48,7 +49,6 @@ def build_after_sale_graph(checkpointer=None):
 
 
 if __name__ == "__main__":
-    from langgraph.types import Command
     app = build_after_sale_graph()
     config = {"configurable": {"thread_id": "after-sale-001"}}
     # 需要真实 LLM API Key 运行

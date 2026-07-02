@@ -1,14 +1,15 @@
 """知识库问答节点单元测试 — mock LLM 与 retriever"""
+
 from unittest.mock import MagicMock, patch
 
 from langchain_core.messages import AIMessage
 
 from src.modules.knowledge_qa.nodes import (
-    grade_docs_node,
     generate_node,
-    verify_node,
+    grade_docs_node,
     route_after_grade,
     route_after_verify,
+    verify_node,
 )
 
 
@@ -19,7 +20,17 @@ def test_grade_docs_relevant(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content="relevant")
     mock_get_llm.return_value = mock_llm
 
-    state = {"question": "Q", "documents": ["doc"], "web_results": [], "answer": "", "citations": [], "verification": "", "retries": 0, "error": None, "error_node": None}
+    state = {
+        "question": "Q",
+        "documents": ["doc"],
+        "web_results": [],
+        "answer": "",
+        "citations": [],
+        "verification": "",
+        "retries": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = grade_docs_node(state)
     assert result["verification"] == "docs_relevant"
 
@@ -31,7 +42,17 @@ def test_grade_docs_irrelevant(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content="irrelevant")
     mock_get_llm.return_value = mock_llm
 
-    state = {"question": "Q", "documents": ["doc"], "web_results": [], "answer": "", "citations": [], "verification": "", "retries": 0, "error": None, "error_node": None}
+    state = {
+        "question": "Q",
+        "documents": ["doc"],
+        "web_results": [],
+        "answer": "",
+        "citations": [],
+        "verification": "",
+        "retries": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = grade_docs_node(state)
     assert result["verification"] == "docs_irrelevant"
 
@@ -43,7 +64,17 @@ def test_generate_node_returns_answer(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content="基于文档的回答...")
     mock_get_llm.return_value = mock_llm
 
-    state = {"question": "Q", "documents": ["doc"], "web_results": [], "answer": "", "citations": [], "verification": "", "retries": 0, "error": None, "error_node": None}
+    state = {
+        "question": "Q",
+        "documents": ["doc"],
+        "web_results": [],
+        "answer": "",
+        "citations": [],
+        "verification": "",
+        "retries": 0,
+        "error": None,
+        "error_node": None,
+    }
     result = generate_node(state)
     assert result["answer"] == "基于文档的回答..."
     assert result["retries"] == 1
@@ -56,7 +87,17 @@ def test_verify_node_passed(mock_get_llm):
     mock_llm.invoke.return_value = AIMessage(content="passed, 回答基于文档")
     mock_get_llm.return_value = mock_llm
 
-    state = {"question": "Q", "documents": ["doc"], "web_results": [], "answer": "A", "citations": [], "verification": "", "retries": 1, "error": None, "error_node": None}
+    state = {
+        "question": "Q",
+        "documents": ["doc"],
+        "web_results": [],
+        "answer": "A",
+        "citations": [],
+        "verification": "",
+        "retries": 1,
+        "error": None,
+        "error_node": None,
+    }
     result = verify_node(state)
     assert result["verification"] == "passed"
 

@@ -1,13 +1,14 @@
 """FastAPI 应用入口 — 注册所有路由"""
+
 from fastapi import FastAPI
 
 from src.api.middleware import LoggingMiddleware
 from src.api.routes import (
-    intent_router,
-    lead_qualifier,
-    knowledge_qa,
-    multi_agent,
     after_sale,
+    intent_router,
+    knowledge_qa,
+    lead_qualifier,
+    multi_agent,
     wechat_risk,
 )
 

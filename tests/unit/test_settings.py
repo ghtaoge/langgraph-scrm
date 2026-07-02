@@ -1,6 +1,6 @@
 """测试 Settings 配置加载"""
-import pytest
-from src.config.settings import Settings, LLMProvider
+
+from src.config.settings import LLMProvider, Settings
 
 
 def test_default_provider_is_openai():

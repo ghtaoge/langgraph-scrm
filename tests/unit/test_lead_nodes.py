@@ -1,4 +1,5 @@
 """线索评级节点单元测试"""
+
 import json
 from unittest.mock import MagicMock, patch
 
@@ -38,9 +39,7 @@ def test_ask_question_node_appends_question(mock_get_llm):
 def test_evaluate_node_returns_score(mock_get_llm):
     """evaluate_node 应返回评分和评级"""
     mock_llm = MagicMock()
-    mock_llm.invoke.return_value = AIMessage(
-        content=json.dumps({"score": 75.0, "qualification": "hot"})
-    )
+    mock_llm.invoke.return_value = AIMessage(content=json.dumps({"score": 75.0, "qualification": "hot"}))
     mock_get_llm.return_value = mock_llm
 
     state = {

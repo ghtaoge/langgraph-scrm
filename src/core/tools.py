@@ -1,4 +1,5 @@
 """通用工具注册 — 搜索/计算等基础工具"""
+
 from langchain_core.tools import tool
 
 

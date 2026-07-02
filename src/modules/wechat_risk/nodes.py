@@ -1,4 +1,5 @@
 """微信风控模块节点函数 — 四路条件分支 + interrupt 上报"""
+
 import json
 import logging
 import uuid
@@ -6,7 +7,7 @@ import uuid
 from langchain_core.messages import HumanMessage
 from langgraph.types import interrupt
 
-from src.config.prompts import WECHAT_RISK_CLASSIFY_PROMPT, WECHAT_RISK_ASSESS_PROMPT
+from src.config.prompts import WECHAT_RISK_ASSESS_PROMPT, WECHAT_RISK_CLASSIFY_PROMPT
 from src.core.llm import get_llm, safe_llm_call
 
 logger = logging.getLogger("langgraph-scrm.wechat_risk")
@@ -21,9 +22,7 @@ def receive_message_node(state: dict) -> dict:
 def classify_node(state: dict) -> dict:
     """消息分类节点 — 将消息分为 4 类"""
     llm = get_llm()
-    prompt = WECHAT_RISK_CLASSIFY_PROMPT.format(
-        content=state["content"], sender=state["sender"]
-    )
+    prompt = WECHAT_RISK_CLASSIFY_PROMPT.format(content=state["content"], sender=state["sender"])
     response = llm.invoke([HumanMessage(content=prompt)])
 
     try:
@@ -68,13 +67,15 @@ def risk_assess_node(state: dict) -> dict:
 
 def escalate_node(state: dict) -> dict:
     """上报节点 — interrupt() 暂停等待主管决策"""
-    decision = interrupt({
-        "question": "高风险消息需主管审核",
-        "message_id": state.get("message_id"),
-        "content": state.get("content"),
-        "risk_score": state.get("risk_score"),
-        "risk_category": state.get("risk_category"),
-    })
+    decision = interrupt(
+        {
+            "question": "高风险消息需主管审核",
+            "message_id": state.get("message_id"),
+            "content": state.get("content"),
+            "risk_score": state.get("risk_score"),
+            "risk_category": state.get("risk_category"),
+        }
+    )
     return {"escalation_decision": decision.get("decision", "approve_block")}
 
 

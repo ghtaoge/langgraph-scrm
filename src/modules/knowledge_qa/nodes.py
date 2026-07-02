@@ -4,6 +4,7 @@ LangGraph 知识点:
 - ToolNode：LangGraph 内置的工具执行节点
 - RAG 流程：retrieve → grade → generate → verify → (循环重试)
 """
+
 import logging
 
 from langchain_core.messages import HumanMessage
@@ -47,6 +48,7 @@ def grade_docs_node(state: dict) -> dict:
 def web_search_node(state: dict) -> dict:
     """网页搜索节点 — 文档不足时的补充检索"""
     from src.core.tools import web_search
+
     result = web_search.invoke(state["question"])
     return {"web_results": [result]}
 

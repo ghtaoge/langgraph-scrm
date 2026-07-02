@@ -5,13 +5,14 @@ LangGraph 知识点:
 - interrupt()：在节点内暂停执行，等待外部输入
 - Command(resume=...)：恢复执行时传入人工决策
 """
+
 import json
 import logging
 
 from langchain_core.messages import HumanMessage
 from langgraph.types import interrupt
 
-from src.config.prompts import LEAD_QUALIFIER_QUESTION_PROMPT, LEAD_QUALIFIER_EVALUATE_PROMPT
+from src.config.prompts import LEAD_QUALIFIER_EVALUATE_PROMPT, LEAD_QUALIFIER_QUESTION_PROMPT
 from src.config.settings import settings
 from src.core.llm import get_llm, safe_llm_call
 
@@ -45,8 +46,7 @@ def evaluate_node(state: dict) -> dict:
     """
     llm = get_llm()
     qa_pairs = "\n".join(
-        f"Q: {q}\nA: {a}"
-        for q, a in zip(state.get("questions_asked", []), state.get("answers_received", []))
+        f"Q: {q}\nA: {a}" for q, a in zip(state.get("questions_asked", []), state.get("answers_received", []))
     )
     prompt = LEAD_QUALIFIER_EVALUATE_PROMPT.format(
         lead_info=json.dumps(state["lead_info"], ensure_ascii=False),
@@ -78,12 +78,14 @@ def human_review_node(state: dict) -> dict:
     - interrupt() 的返回值是 resume 时传入的值
     - 使用 Command(resume={"human_decision": "approve"}) 恢复
     """
-    decision = interrupt({
-        "question": "请审核线索评级结果",
-        "score": state.get("score", 0),
-        "qualification": state.get("qualification", "cold"),
-        "lead_info": state.get("lead_info", {}),
-    })
+    decision = interrupt(
+        {
+            "question": "请审核线索评级结果",
+            "score": state.get("score", 0),
+            "qualification": state.get("qualification", "cold"),
+            "lead_info": state.get("lead_info", {}),
+        }
+    )
 
     # decision 是 Command(resume=...) 传入的值
     human_decision = decision.get("human_decision", "approve")

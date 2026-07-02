@@ -1,4 +1,5 @@
 """API 共享依赖 — 进程内共享 Checkpointer（用于 interrupt 模块跨请求恢复）"""
+
 import uuid
 
 from langgraph.checkpoint.memory import InMemorySaver
@@ -34,6 +35,7 @@ def run_graph_with_interrupt(graph, input_state: dict, thread_id: str):
 def resume_graph(graph, resume_payload: dict, thread_id: str):
     """恢复处于 interrupt 暂停的图"""
     from langgraph.types import Command
+
     config = {"configurable": {"thread_id": thread_id}}
     graph.invoke(Command(resume=resume_payload), config=config)
     state = graph.get_state(config)

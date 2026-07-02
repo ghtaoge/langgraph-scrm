@@ -1,4 +1,5 @@
 """售后工单模块节点函数 — 长流程 + 双审批"""
+
 import json
 import logging
 import uuid
@@ -25,9 +26,7 @@ def create_ticket_node(state: dict) -> dict:
 def analyze_node(state: dict) -> dict:
     """分析节点 — AI 分析问题类型和严重度"""
     llm = get_llm()
-    prompt = AFTER_SALE_ANALYZE_PROMPT.format(
-        customer_request=state["customer_request"]
-    )
+    prompt = AFTER_SALE_ANALYZE_PROMPT.format(customer_request=state["customer_request"])
     response = llm.invoke([HumanMessage(content=prompt)])
 
     try:
@@ -43,13 +42,15 @@ def analyze_node(state: dict) -> dict:
 
 def approve_node(state: dict) -> dict:
     """主管审批节点 — interrupt() 暂停等待人工决策"""
-    decision = interrupt({
-        "question": "请审批售后工单",
-        "ticket_id": state.get("ticket_id", ""),
-        "issue_type": state.get("issue_type", ""),
-        "severity": state.get("severity", ""),
-        "customer_request": state.get("customer_request", ""),
-    })
+    decision = interrupt(
+        {
+            "question": "请审批售后工单",
+            "ticket_id": state.get("ticket_id", ""),
+            "issue_type": state.get("issue_type", ""),
+            "severity": state.get("severity", ""),
+            "customer_request": state.get("customer_request", ""),
+        }
+    )
 
     approval_status = decision.get("approval_status", "approved")
     approver_comment = decision.get("comment", "")
@@ -73,11 +74,13 @@ def execute_node(state: dict) -> dict:
 
 def verify_node(state: dict) -> dict:
     """客户验证节点 — interrupt() 暂停等待客户反馈"""
-    feedback = interrupt({
-        "question": "请确认客户满意度",
-        "ticket_id": state.get("ticket_id", ""),
-        "resolution": state.get("resolution", ""),
-    })
+    feedback = interrupt(
+        {
+            "question": "请确认客户满意度",
+            "ticket_id": state.get("ticket_id", ""),
+            "resolution": state.get("resolution", ""),
+        }
+    )
 
     return {"customer_feedback": feedback.get("feedback", "满意"), "status": "verifying"}
 

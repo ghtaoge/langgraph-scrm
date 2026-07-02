@@ -5,6 +5,7 @@ LangGraph 知识点:
 - 节点函数只更新需要修改的字段，其他字段保持不变
 - 使用 @safe_llm_call 装饰器处理 LLM 调用异常
 """
+
 import json
 import logging
 
@@ -12,10 +13,10 @@ from langchain_core.messages import HumanMessage
 
 from src.config.prompts import (
     INTENT_ROUTER_CLASSIFY_PROMPT,
-    INTENT_ROUTER_RESPOND_CONSULT_PROMPT,
     INTENT_ROUTER_ESCALATE_COMPLAINT_PROMPT,
     INTENT_ROUTER_HANDLE_AFTER_SALE_PROMPT,
     INTENT_ROUTER_OTHER_PROMPT,
+    INTENT_ROUTER_RESPOND_CONSULT_PROMPT,
 )
 from src.core.llm import get_llm, safe_llm_call
 
@@ -64,9 +65,7 @@ def classify_node(state: dict) -> dict:
 def respond_consult(state: dict) -> dict:
     """咨询类处理节点"""
     llm = get_llm()
-    prompt = INTENT_ROUTER_RESPOND_CONSULT_PROMPT.format(
-        message=state["message"], intent=state["intent"]
-    )
+    prompt = INTENT_ROUTER_RESPOND_CONSULT_PROMPT.format(message=state["message"], intent=state["intent"])
     response = llm.invoke([HumanMessage(content=prompt)])
     return {"response": response.content}
 

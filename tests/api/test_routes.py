@@ -1,9 +1,10 @@
 """API 路由测试 — 使用 httpx ASGITransport"""
+
 import json
 from unittest.mock import MagicMock, patch
 
 import pytest
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 from langchain_core.messages import AIMessage
 
 from src.api.main import app

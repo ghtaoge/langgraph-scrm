@@ -1,6 +1,7 @@
 """知识库问答模块工具 — 向量检索工具"""
-from langchain_core.tools import tool
+
 from langchain_chroma import Chroma
+from langchain_core.tools import tool
 from langchain_openai import OpenAIEmbeddings
 
 from src.config.settings import settings
@@ -27,7 +28,7 @@ def get_retriever_tool(collection_name: str = "scrm_knowledge"):
     retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
 
     @tool
-    def retriever(query: str) -> str:
+    def retriever_tool(query: str) -> str:
         """知识库检索 — 搜索 SCRM 产品文档和 FAQ
 
         Args:
@@ -39,4 +40,4 @@ def get_retriever_tool(collection_name: str = "scrm_knowledge"):
         docs = retriever.invoke(query)
         return "\n\n".join(doc.page_content for doc in docs)
 
-    return retriever
+    return retriever_tool

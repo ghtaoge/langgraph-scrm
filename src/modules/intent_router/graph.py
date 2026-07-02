@@ -7,17 +7,18 @@ LangGraph 知识点:
 - add_conditional_edges(from, condition_fn, map) 添加条件边
 - compile() 编译为可运行图
 """
-from langgraph.graph import StateGraph, START, END
 
-from src.modules.intent_router.state import IntentRouterState
+from langgraph.graph import END, START, StateGraph
+
 from src.modules.intent_router.nodes import (
     classify_node,
-    respond_consult,
     escalate_complaint,
     handle_after_sale,
     handle_other,
+    respond_consult,
     route_by_intent,
 )
+from src.modules.intent_router.state import IntentRouterState
 
 
 def build_intent_router_graph():
@@ -49,15 +50,17 @@ def build_intent_router_graph():
 # 模块入口 — 直接运行此模块可测试意图路由
 if __name__ == "__main__":
     app = build_intent_router_graph()
-    result = app.invoke({
-        "message": "我想了解一下你们产品的价格",
-        "intent": "",
-        "confidence": 0.0,
-        "skill_group": "",
-        "response": "",
-        "error": None,
-        "error_node": None,
-    })
+    result = app.invoke(
+        {
+            "message": "我想了解一下你们产品的价格",
+            "intent": "",
+            "confidence": 0.0,
+            "skill_group": "",
+            "response": "",
+            "error": None,
+            "error_node": None,
+        }
+    )
     print(f"意图: {result['intent']}")
     print(f"技能组: {result['skill_group']}")
     print(f"回复: {result['response']}")

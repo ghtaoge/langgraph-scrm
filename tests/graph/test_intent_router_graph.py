@@ -1,4 +1,5 @@
 """意图路由图集成测试 — 使用 fake LLM 验证完整图流程"""
+
 import json
 from unittest.mock import MagicMock, patch
 
@@ -19,15 +20,17 @@ def test_intent_router_full_flow_consult(mock_get_llm):
     mock_get_llm.return_value = mock_llm
 
     graph = build_intent_router_graph()
-    result = graph.invoke({
-        "message": "我想咨询产品价格",
-        "intent": "",
-        "confidence": 0.0,
-        "skill_group": "",
-        "response": "",
-        "error": None,
-        "error_node": None,
-    })
+    result = graph.invoke(
+        {
+            "message": "我想咨询产品价格",
+            "intent": "",
+            "confidence": 0.0,
+            "skill_group": "",
+            "response": "",
+            "error": None,
+            "error_node": None,
+        }
+    )
 
     assert result["intent"] == "consult"
     assert result["skill_group"] == "产品咨询组"
@@ -45,15 +48,17 @@ def test_intent_router_full_flow_complaint(mock_get_llm):
     mock_get_llm.return_value = mock_llm
 
     graph = build_intent_router_graph()
-    result = graph.invoke({
-        "message": "服务太差了我要投诉",
-        "intent": "",
-        "confidence": 0.0,
-        "skill_group": "",
-        "response": "",
-        "error": None,
-        "error_node": None,
-    })
+    result = graph.invoke(
+        {
+            "message": "服务太差了我要投诉",
+            "intent": "",
+            "confidence": 0.0,
+            "skill_group": "",
+            "response": "",
+            "error": None,
+            "error_node": None,
+        }
+    )
 
     assert result["intent"] == "complaint"
     assert result["skill_group"] == "投诉处理组"

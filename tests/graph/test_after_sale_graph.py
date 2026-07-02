@@ -1,6 +1,8 @@
 """售后工单图集成测试 — 双 interrupt + resume 完整流程"""
+
 import json
 from unittest.mock import MagicMock, patch
+
 from langchain_core.messages import AIMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command
@@ -24,9 +26,16 @@ def test_after_sale_full_flow_approve_satisfied(mock_get_llm):
 
     initial = {
         "customer_request": "产品质量有问题，要求退款",
-        "ticket_id": "", "issue_type": "", "severity": "",
-        "approval_status": "", "approver_comment": "", "resolution": "",
-        "customer_feedback": "", "status": "", "error": None, "error_node": None,
+        "ticket_id": "",
+        "issue_type": "",
+        "severity": "",
+        "approval_status": "",
+        "approver_comment": "",
+        "resolution": "",
+        "customer_feedback": "",
+        "status": "",
+        "error": None,
+        "error_node": None,
     }
 
     # 第一轮 — 在 approve 处 interrupt
@@ -49,8 +58,8 @@ def test_after_sale_unsatisfied_reexecutes(mock_get_llm):
     mock_llm = MagicMock()
     mock_llm.invoke.side_effect = [
         AIMessage(content=json.dumps({"issue_type": "repair", "severity": "medium"})),  # analyze
-        AIMessage(content="已安排维修"),     # 第一次 execute
-        AIMessage(content="已重新处理"),     # 第二次 execute（重试）
+        AIMessage(content="已安排维修"),  # 第一次 execute
+        AIMessage(content="已重新处理"),  # 第二次 execute（重试）
     ]
     mock_get_llm.return_value = mock_llm
 
@@ -59,9 +68,17 @@ def test_after_sale_unsatisfied_reexecutes(mock_get_llm):
     config = {"configurable": {"thread_id": "after-sale-002"}}
 
     initial = {
-        "customer_request": "产品需要维修", "ticket_id": "", "issue_type": "", "severity": "",
-        "approval_status": "", "approver_comment": "", "resolution": "",
-        "customer_feedback": "", "status": "", "error": None, "error_node": None,
+        "customer_request": "产品需要维修",
+        "ticket_id": "",
+        "issue_type": "",
+        "severity": "",
+        "approval_status": "",
+        "approver_comment": "",
+        "resolution": "",
+        "customer_feedback": "",
+        "status": "",
+        "error": None,
+        "error_node": None,
     }
 
     graph.invoke(initial, config=config)  # interrupt at approve

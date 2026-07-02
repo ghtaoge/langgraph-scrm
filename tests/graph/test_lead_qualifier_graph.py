@@ -1,6 +1,8 @@
 """线索评级图集成测试"""
+
 import json
 from unittest.mock import MagicMock, patch
+
 from langchain_core.messages import AIMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.types import Command

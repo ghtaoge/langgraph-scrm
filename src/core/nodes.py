@@ -1,4 +1,5 @@
 """通用节点函数基类 — 提供错误处理和日志记录的标准模式"""
+
 import logging
 
 from src.core.llm import create_error_state

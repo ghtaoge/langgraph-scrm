@@ -6,17 +6,18 @@ LangGraph 知识点:
 - Checkpoint：compile(checkpointer=...) 支持暂停恢复
 - Command(resume=...)：恢复时传入人工决策
 """
-from langgraph.graph import StateGraph, START, END
 
-from src.modules.lead_qualifier.state import LeadQualifierState
+from langgraph.graph import END, START, StateGraph
+
+from src.core.checkpoint import get_checkpointer
 from src.modules.lead_qualifier.nodes import (
     ask_question_node,
     evaluate_node,
-    human_review_node,
     finalize_node,
+    human_review_node,
     should_continue_evaluation,
 )
-from src.core.checkpoint import get_checkpointer
+from src.modules.lead_qualifier.state import LeadQualifierState
 
 
 def build_lead_qualifier_graph(checkpointer=None):
@@ -55,8 +56,6 @@ def build_lead_qualifier_graph(checkpointer=None):
 
 
 if __name__ == "__main__":
-    from langgraph.types import Command
-
     app = build_lead_qualifier_graph()
     thread_id = "lead-test-001"
     config = {"configurable": {"thread_id": thread_id}}

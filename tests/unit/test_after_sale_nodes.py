@@ -1,12 +1,13 @@
 """售后工单节点单元测试"""
+
 import json
 from unittest.mock import MagicMock, patch
 
 from langchain_core.messages import AIMessage
 
 from src.modules.after_sale.nodes import (
-    create_ticket_node,
     analyze_node,
+    create_ticket_node,
     route_after_approve,
     route_after_verify,
 )
@@ -24,12 +25,22 @@ def test_create_ticket_node_generates_id():
 def test_analyze_node_returns_issue_type(mock_get_llm):
     """analyze_node 应返回问题类型和严重度"""
     mock_llm = MagicMock()
-    mock_llm.invoke.return_value = AIMessage(
-        content=json.dumps({"issue_type": "refund", "severity": "high"})
-    )
+    mock_llm.invoke.return_value = AIMessage(content=json.dumps({"issue_type": "refund", "severity": "high"}))
     mock_get_llm.return_value = mock_llm
 
-    state = {"customer_request": "要求退款", "ticket_id": "T1", "issue_type": "", "severity": "", "approval_status": "", "approver_comment": "", "resolution": "", "customer_feedback": "", "status": "", "error": None, "error_node": None}
+    state = {
+        "customer_request": "要求退款",
+        "ticket_id": "T1",
+        "issue_type": "",
+        "severity": "",
+        "approval_status": "",
+        "approver_comment": "",
+        "resolution": "",
+        "customer_feedback": "",
+        "status": "",
+        "error": None,
+        "error_node": None,
+    }
     result = analyze_node(state)
     assert result["issue_type"] == "refund"
     assert result["severity"] == "high"

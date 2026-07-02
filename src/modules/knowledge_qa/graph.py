@@ -1,17 +1,18 @@
 """知识库问答模块 StateGraph — Corrective RAG 模式"""
-from langgraph.graph import StateGraph, START, END
 
-from src.modules.knowledge_qa.state import KnowledgeQAState
+from langgraph.graph import END, START, StateGraph
+
 from src.modules.knowledge_qa.nodes import (
-    retrieve_node,
-    grade_docs_node,
-    web_search_node,
     generate_node,
-    verify_node,
+    grade_docs_node,
     respond_node,
+    retrieve_node,
     route_after_grade,
     route_after_verify,
+    verify_node,
+    web_search_node,
 )
+from src.modules.knowledge_qa.state import KnowledgeQAState
 
 
 def build_knowledge_qa_graph():
@@ -47,15 +48,17 @@ def build_knowledge_qa_graph():
 
 if __name__ == "__main__":
     app = build_knowledge_qa_graph()
-    result = app.invoke({
-        "question": "SCRM 系统支持哪些微信功能？",
-        "documents": [],
-        "web_results": [],
-        "answer": "",
-        "citations": [],
-        "verification": "",
-        "retries": 0,
-        "error": None,
-        "error_node": None,
-    })
+    result = app.invoke(
+        {
+            "question": "SCRM 系统支持哪些微信功能？",
+            "documents": [],
+            "web_results": [],
+            "answer": "",
+            "citations": [],
+            "verification": "",
+            "retries": 0,
+            "error": None,
+            "error_node": None,
+        }
+    )
     print(f"回答: {result['answer']}")

@@ -6,18 +6,19 @@ LangGraph 知识点:
 - 质量检查不合格时循环回到 Supervisor
 - 并行 Agent 通过 dict reducer 安全合并 agent_responses
 """
+
 import json
 import logging
 
 from langchain_core.messages import HumanMessage
 
 from src.config.prompts import (
-    MULTI_AGENT_SUPERVISOR_PROMPT,
-    MULTI_AGENT_PRODUCT_PROMPT,
-    MULTI_AGENT_POLICY_PROMPT,
     MULTI_AGENT_ORDER_PROMPT,
-    MULTI_AGENT_SYNTHESIZE_PROMPT,
+    MULTI_AGENT_POLICY_PROMPT,
+    MULTI_AGENT_PRODUCT_PROMPT,
     MULTI_AGENT_QUALITY_PROMPT,
+    MULTI_AGENT_SUPERVISOR_PROMPT,
+    MULTI_AGENT_SYNTHESIZE_PROMPT,
 )
 from src.core.llm import get_llm, safe_llm_call
 
@@ -32,9 +33,7 @@ def supervisor_node(state: dict) -> dict:
     而非硬编码条件分支。
     """
     llm = get_llm()
-    prompt = MULTI_AGENT_SUPERVISOR_PROMPT.format(
-        customer_question=state["customer_question"]
-    )
+    prompt = MULTI_AGENT_SUPERVISOR_PROMPT.format(customer_question=state["customer_question"])
     response = llm.invoke([HumanMessage(content=prompt)])
 
     try:
@@ -51,9 +50,7 @@ def supervisor_node(state: dict) -> dict:
 def product_expert_node(state: dict) -> dict:
     """产品专家 Agent 节点"""
     llm = get_llm()
-    prompt = MULTI_AGENT_PRODUCT_PROMPT.format(
-        customer_question=state["customer_question"]
-    )
+    prompt = MULTI_AGENT_PRODUCT_PROMPT.format(customer_question=state["customer_question"])
     response = llm.invoke([HumanMessage(content=prompt)])
     # 仅返回本 Agent 的部分 dict，由 reducer 合并（并行安全）
     return {"agent_responses": {"product_expert": response.content}}
@@ -63,9 +60,7 @@ def product_expert_node(state: dict) -> dict:
 def policy_expert_node(state: dict) -> dict:
     """政策专家 Agent 节点"""
     llm = get_llm()
-    prompt = MULTI_AGENT_POLICY_PROMPT.format(
-        customer_question=state["customer_question"]
-    )
+    prompt = MULTI_AGENT_POLICY_PROMPT.format(customer_question=state["customer_question"])
     response = llm.invoke([HumanMessage(content=prompt)])
     return {"agent_responses": {"policy_expert": response.content}}
 
@@ -74,9 +69,7 @@ def policy_expert_node(state: dict) -> dict:
 def order_handler_node(state: dict) -> dict:
     """订单处理 Agent 节点"""
     llm = get_llm()
-    prompt = MULTI_AGENT_ORDER_PROMPT.format(
-        customer_question=state["customer_question"]
-    )
+    prompt = MULTI_AGENT_ORDER_PROMPT.format(customer_question=state["customer_question"])
     response = llm.invoke([HumanMessage(content=prompt)])
     return {"agent_responses": {"order_handler": response.content}}
 
