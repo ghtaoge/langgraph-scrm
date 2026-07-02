@@ -10,8 +10,8 @@ build/
 .env
 .env.local
 
-# Data (本地运行生成的数据)
-data/
+# Data (本地运行生成的数据，仅忽略根级 data/，保留 src/data 示例文档)
+/data/
 *.db
 
 # IDE
